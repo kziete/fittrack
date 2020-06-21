@@ -1,3 +1,4 @@
+import 'package:fittrack/app/weightpage/weight_form.dart';
 import 'package:fittrack/domain/weight.dart';
 import 'package:fittrack/services/auth.dart';
 import 'package:fittrack/services/database.dart';
@@ -5,12 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  Future<void> _addShit(BuildContext context){
-    final db = Provider.of<Database>(context, listen: false);
-    db.addWeight({
-      'amount': 100,
-    });
+  Future<void> _openForm(BuildContext context){
+    final database = Provider.of<Database>(context, listen: false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+       fullscreenDialog: true,
+       builder: (_) => WeightForm(database: database)
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -27,7 +33,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _addShit(context),
+        onPressed: () => _openForm(context),
       ),
       body: StreamBuilder<List<Weight>>(
         stream: db.weights(),
